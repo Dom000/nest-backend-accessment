@@ -1,10 +1,11 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
+import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
 
 
 export default () => ({
-    
+
     app: {
         environment:
             process.env.APP_ENV === 'production'
@@ -24,9 +25,9 @@ export default () => ({
             username: process.env.DB_USERNAME,
             password: process.env.DB_PASSWORD,
             name: process.env.DB_NAME,
-            db_url: process.env.DATABASE_URL,
         },
     },
+
     jwt: {
         access: {
             secret: process.env.MY_JWT_SECRET,

@@ -1,31 +1,29 @@
 import { User } from 'src/modules/users/entities/user.entity';
 import { CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn, Entity, Column, ManyToOne } from 'typeorm';
-@Entity("transactions")
+@Entity("transactionref")
 
-export class Transaction {
-
-
-
-
+export class TransactionRef {
 
 
     @PrimaryGeneratedColumn()
     id: string;
 
-    @Column()
-    sender: string;
+    @Column({ unique: true })
+    ref: string;
 
     @Column()
     reciever: string;
 
-    @Column()
-    amount: number;
-
 
     @Column()
-    transaction_ref: string;
+    validiy: Date;
 
-    @ManyToOne(() => User, (user) => user.transactions)
+
+    @Column({ default: false })
+    expired: boolean;
+ 
+
+    @ManyToOne(() => User, (user) => user.transactionref)
     user: User
 
     @CreateDateColumn({

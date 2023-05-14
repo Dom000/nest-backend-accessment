@@ -5,9 +5,6 @@ import { ConfigService } from '@nestjs/config';
 import { json, urlencoded } from 'express';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { join } from 'path';
-
-
 
 
 async function bootstrap() {
@@ -20,7 +17,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
   }));
-  
+
 
   const config = new DocumentBuilder().addBearerAuth({
     type: 'http',
@@ -38,7 +35,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/', app, document);
 
-
   const port = configService.get<number>('app.port');
   app.enableCors({
     origin: configService.get('cors.origin'),
@@ -50,8 +46,6 @@ async function bootstrap() {
     console.log(`Running on ${configService.get<number>('app.full_url')}`);
 
   })
-
-
 
 }
 bootstrap();
