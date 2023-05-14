@@ -1,6 +1,8 @@
 import { Factory, Seeder } from "typeorm-seeding";
 import { DataSource } from "typeorm";
 import { User, UserRole } from "./../../modules/users/entities/user.entity"
+import { Transaction } from "src/modules/transactions/entities/transaction.entity";
+import { TransactionRef } from "src/modules/transactions/entities/transactionref.entity";
 
 export class UsersTableSeeder implements Seeder {
     public async run(factory: Factory, connection: DataSource): Promise<void> {
@@ -9,6 +11,9 @@ export class UsersTableSeeder implements Seeder {
             email: ' admin@dev.com',
             password: 'devAdmin123',
         });
-        await factory(User)().create();
+        // await factory(User)().create();
+        await factory(Transaction)().create()
+        await factory(TransactionRef)().create()
+
     }
 }

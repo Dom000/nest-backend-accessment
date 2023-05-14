@@ -38,11 +38,11 @@ export class User {
     role: UserRole
 
     @OneToMany(() => Transaction, transaction => transaction.user)
-    transactions: Transaction[];
-    
+    transactions?: Transaction[];
+
 
     @OneToMany(() => TransactionRef, transactionref => transactionref.user)
-    transactionref: TransactionRef[];
+    transactionref?: TransactionRef[];
 
     @CreateDateColumn({
         type: 'timestamp',
