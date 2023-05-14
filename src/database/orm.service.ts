@@ -27,7 +27,7 @@ export class OrmService {
             // autoLoadEntities: true,
             // migrationsTableName: 'migration',
             migrations: [`${__dirname}/migrations/{.ts,.js}`],
-            synchronize: false,
+            synchronize: true,
             ssl: true,
             extra: {
                 ssl: {

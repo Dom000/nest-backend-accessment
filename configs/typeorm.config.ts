@@ -12,6 +12,6 @@ export default new DataSource({
   extra: {
     charset: 'utf8mb4_unicode_ci',
   },
-  synchronize: false,
+  synchronize: true,
   ssl: true,
 });

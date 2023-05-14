@@ -1,4 +1,4 @@
-import { User } from 'src/modules/users/entities/user.entity';
+import { User } from '../../users/entities/user.entity';
 import { CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn, Entity, Column, ManyToOne } from 'typeorm';
 @Entity("transactions")
 
@@ -26,7 +26,7 @@ export class Transaction {
     transaction_ref: string;
 
     @ManyToOne(() => User, (user) => user.transactions)
-    user: User
+    user?: User
 
     @CreateDateColumn({
         type: 'timestamp',

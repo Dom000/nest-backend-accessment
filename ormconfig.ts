@@ -14,6 +14,13 @@ const configs: TypeOrmModuleOptions & { seeds: string[]; factories: string[] } =
     migrations: [ 'src/database/migrations/*{.ts,.js}' ],
     seeds: [ 'src/database/seeds/**/*{.ts,.js}' ],
     factories: [ 'src/database/factories/**/*{.ts,.js}' ],
+    synchronize: true,
+    ssl: true,
+    extra: {
+        ssl: {
+            rejectUnauthorized: false
+        }
+    }
 };
 
 module.exports = configs;

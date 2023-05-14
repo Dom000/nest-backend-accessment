@@ -1,5 +1,5 @@
-import { Transaction } from 'src/modules/transactions/entities/transaction.entity';
-import { TransactionRef } from 'src/modules/transactions/entities/transactionref.entity';
+import { Transaction } from '../../transactions/entities/transaction.entity';
+import { TransactionRef } from '../../transactions/entities/transactionref.entity';
 import { CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn, Entity, Column, OneToMany } from 'typeorm';
 
 export enum UserRole {
