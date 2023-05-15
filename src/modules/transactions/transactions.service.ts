@@ -14,6 +14,7 @@ export class TransactionsService {
 
 
   async create(createTransactionDto: CreateTransactionDto) {
+    console.log(createTransactionDto);
 
     const createTransaction = this.transactionRepo.create(createTransactionDto)
     await this.transactionRepo.save(createTransaction)

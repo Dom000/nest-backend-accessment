@@ -12,8 +12,13 @@ export class CreateTransactionDto {
     @ApiProperty({ description: 'This is the recievers id', example: "2" })
     @IsNotEmpty()
     @IsString()
-    receiver: string
+    reciever: string
 
+
+    @ApiProperty({ description: 'This is the user id', example: "2" })
+    @IsNotEmpty()
+    @IsString()
+    user:string
 
     @ApiProperty({ description: 'This is the amount transacted', example: "100" })
     @IsNotEmpty()
@@ -23,5 +28,5 @@ export class CreateTransactionDto {
     @ApiProperty({ description: 'This is the ref token ', example: "dev2023-05-15T16:12:46.976Z" })
     @IsNotEmpty()
     @IsString()  
-    ref: string
+    transaction_ref: string
 }

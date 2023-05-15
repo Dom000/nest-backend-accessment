@@ -23,6 +23,10 @@ export class TransactionRef {
     expired: boolean;
 
 
+    @Column()
+    refowner: string;
+
+
     @ManyToOne(() => User, (user) => user.transactionref)
     user?: string
 

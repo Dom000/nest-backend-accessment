@@ -41,7 +41,6 @@ export class UsersService {
         role: createUserDto.role
       })
       await this.userRepo.save(user);
-      console.log(user);
 
       return {
         status: HttpStatus.CREATED,
@@ -92,7 +91,7 @@ export class UsersService {
 
     const ref = generateref()
     const refToCreate = this.transactionrefRepo.create({
-      user: req.user['id'], ref: ref, validiy: validitydate.toISOString(), reciever: req.user["first_name"]
+      user: req.user['id'], refowner: req.user['id'], ref: ref, validiy: validitydate.toISOString(), reciever: req.user["first_name"]
     });
     await this.transactionrefRepo.save(refToCreate);
 
@@ -127,6 +126,8 @@ export class UsersService {
         transactionref: true
       }
     })
+
+
 
 
 
@@ -188,7 +189,7 @@ export class UsersService {
       // find the ref owner to add his balance
       const findRefOwner = await this.userRepo.findOne({
         where: {
-          id: findRefOwnerRef.user
+          id: findRefOwnerRef.refowner
         }
       })
 
@@ -209,15 +210,18 @@ export class UsersService {
       await this.userRepo.save(updateSenderBalance.raw)
 
       //   update ref as used
-      const updateOwnerRef = await this.transactionrefRepo.update(fundwalletdto.ref, {
+      const updateOwnerRef = await this.transactionrefRepo.update(findRefOwnerRef.id, {
         expired: true
       })
       await this.transactionrefRepo.save(updateOwnerRef.raw)
 
       //   create transactions
 
-      const createTransaction = await this.transactionService.create({
-        amount: fundwalletdto.amount, receiver: findRefOwner.id, ref: fundwalletdto.ref, sender: user.id
+      const transaction1 = await this.transactionService.create({
+        amount: fundwalletdto.amount, reciever: findRefOwner.id, transaction_ref: fundwalletdto.ref, sender: req.user['id'], user: req.user['id']
+      })
+      const transaction2 = await this.transactionService.create({
+        amount: fundwalletdto.amount, reciever: findRefOwner.id, transaction_ref: fundwalletdto.ref, sender: req.user['id'], user: findRefOwner.id
       })
 
       // await this.transactionService.save(createTransaction.raw)
