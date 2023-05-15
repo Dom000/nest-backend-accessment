@@ -8,7 +8,7 @@ export default () => ({
 
     app: {
         environment:
-            process.env.APP_ENV === 'production'
+            process.env.NODE_ENV === 'production'
                 ? 'production'
                 : process.env.APP_ENV,
         port: parseInt(process.env.APP_PORT, 10) || 3000,
@@ -16,7 +16,7 @@ export default () => ({
         name: process.env.APP_NAME || "nestbackend",
         url: process.env.APP_URL,
         global_url_prefix: process.env.GLOBAL_URL_PREFIX || '/',
-        full_url: `${process.env.APP_URL}`,
+        full_url: `${process.env.NODE_ENV === 'production' ? process.env.APP_URL :process.env.APP_URL}`,
     },
     db: {
         default: {

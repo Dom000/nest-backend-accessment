@@ -8,10 +8,11 @@ import * as argon from "argon2"
 import { Request } from 'express';
 import { TransactionRef } from "../transactions/entities/transactionref.entity"
 import { FundWalletDto } from './dto/fundwallet.dto';
+import { TransactionsService } from '../transactions/transactions.service';
 @Injectable()
 export class UsersService {
 
-  constructor(@InjectRepository(User) private readonly userRepo: Repository<User>, @InjectRepository(TransactionRef) private readonly transactionrefRepo: Repository<TransactionRef>) { }
+  constructor(@InjectRepository(User) private readonly userRepo: Repository<User>, @InjectRepository(TransactionRef) private readonly transactionrefRepo: Repository<TransactionRef>, private transactionService: TransactionsService) { }
   async create(createUserDto: CreateUserDto) {
 
 
@@ -53,6 +54,7 @@ export class UsersService {
   }
 
   async findOne(req: Request) {
+
     const data = await this.userRepo.findOne({
       where: { id: req.user['id'] }, relations: {
         transactionref: true,
@@ -174,6 +176,15 @@ export class UsersService {
         }
       }
 
+      // check if ref has already been used
+
+      if (findRefOwnerRef.expired) {
+        return {
+          status: HttpStatus.NOT_FOUND,
+          message: "This ref has already been used"
+        }
+      }
+
       // find the ref owner to add his balance
       const findRefOwner = await this.userRepo.findOne({
         where: {
@@ -196,6 +207,23 @@ export class UsersService {
       })
 
       await this.userRepo.save(updateSenderBalance.raw)
+
+      //   update ref as used
+      const updateOwnerRef = await this.transactionrefRepo.update(fundwalletdto.ref, {
+        expired: true
+      })
+      await this.transactionrefRepo.save(updateOwnerRef.raw)
+
+      //   create transactions
+
+      const createTransaction = await this.transactionService.create({
+        amount: fundwalletdto.amount, receiver: findRefOwner.id, ref: fundwalletdto.ref, sender: user.id
+      })
+
+      // await this.transactionService.save(createTransaction.raw)
+
+
+
 
       return {
         status: HttpStatus.OK,

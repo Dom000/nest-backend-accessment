@@ -23,6 +23,7 @@ export class UsersController {
   @Post("fund-wallet")
   @UseGuards(JwtGuard)
   fundwallet(@Req() req: Request, @Body() fundwalletdto: FundWalletDto) {
+    
     return this.usersService.fundwallet(req, fundwalletdto);
   }
 

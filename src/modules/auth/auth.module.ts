@@ -7,12 +7,14 @@ import { UsersService } from '../users/users.service';
 import { JwtStrategy } from './strategy';
 import { JwtModule, JwtService } from "@nestjs/jwt";
 import { TransactionRef } from '../transactions/entities/transactionref.entity';
+import { Transaction } from '../transactions/entities/transaction.entity';
+import { TransactionsService } from '../transactions/transactions.service';
 
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User,TransactionRef]), JwtModule.register({})],
+  imports: [TypeOrmModule.forFeature([User, TransactionRef, Transaction]), JwtModule.register({})],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, UsersService],
+  providers: [AuthService, JwtStrategy, UsersService, TransactionsService],
   exports: [JwtModule]
 })
 export class AuthModule { }
