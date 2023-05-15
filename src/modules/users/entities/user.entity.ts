@@ -44,6 +44,11 @@ export class User {
     @OneToMany(() => TransactionRef, transactionref => transactionref.user)
     transactionref?: TransactionRef[];
 
+    @Column({
+        default: 0
+    })
+    wallet: number
+
     @CreateDateColumn({
         type: 'timestamp',
     })

@@ -1,6 +1,9 @@
 import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
 import type { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { Transaction } from 'src/modules/transactions/entities/transaction.entity';
+import { User } from 'src/modules/users/entities/user.entity';
+import { TransactionRef } from 'src/modules/transactions/entities/transactionref.entity';
 
 @Injectable()
 export class OrmService {
@@ -23,8 +26,8 @@ export class OrmService {
             username: this.getValue('db.default.username'),
             password: this.getValue('db.default.password'),
             database: this.getValue('db.default.name'),
-            entities: [__dirname + './../**/*.entity{.ts,.js'],
-            // autoLoadEntities: true,
+            entities: [User,Transaction,TransactionRef],
+            autoLoadEntities: true,
             // migrationsTableName: 'migration',
             migrations: [`${__dirname}/migrations/{.ts,.js}`],
             synchronize: true,

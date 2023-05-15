@@ -1,6 +1,7 @@
 import type { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
-const configs: TypeOrmModuleOptions & { seeds: string[]; factories: string[] } =
+export const configs:  PostgresConnectionOptions & { seeds: string[]; factories: string[] } =
 {
     type: 'postgres',
     host: process.env.DB_HOST,
@@ -15,6 +16,7 @@ const configs: TypeOrmModuleOptions & { seeds: string[]; factories: string[] } =
     seeds: [ 'src/database/seeds/**/*{.ts,.js}' ],
     factories: [ 'src/database/factories/**/*{.ts,.js}' ],
     synchronize: true,
+
     ssl: true,
     extra: {
         ssl: {
@@ -23,4 +25,4 @@ const configs: TypeOrmModuleOptions & { seeds: string[]; factories: string[] } =
     }
 };
 
-module.exports = configs;
+// module.exports = configs;

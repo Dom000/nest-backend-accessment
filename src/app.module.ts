@@ -9,6 +9,9 @@ import { TransactionsService } from './modules/transactions/transactions.service
 import { DatabaseModule } from './database/database.module';
 import { OrmService } from './database/orm.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsersService } from './modules/users/users.service';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from './modules/Guard/Role.guard';
 
 
 
@@ -21,6 +24,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     UsersModule,
     TransactionsModule,
     AuthModule],
-  providers: [AuthService, TransactionsService],
+  // providers: [
+  //   {
+  //     provide: APP_GUARD,
+  //     useClass: RolesGuard,
+  //   },]
 })
 export class AppModule { }

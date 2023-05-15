@@ -5,10 +5,6 @@ import { CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn, Entity, Col
 export class Transaction {
 
 
-
-
-
-
     @PrimaryGeneratedColumn()
     id: string;
 
