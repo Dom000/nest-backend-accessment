@@ -6,11 +6,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import * as argon from "argon2"
 import { Request } from 'express';
-
+import { TransactionRef } from "../transactions/entities/transactionref.entity"
+import { FundWalletDto } from './dto/fundwallet.dto';
 @Injectable()
 export class UsersService {
 
-  constructor(@InjectRepository(User) private readonly userRepo: Repository<User>) { }
+  constructor(@InjectRepository(User) private readonly userRepo: Repository<User>, @InjectRepository(TransactionRef) private readonly transactionrefRepo: Repository<TransactionRef>) { }
   async create(createUserDto: CreateUserDto) {
 
 
@@ -21,7 +22,6 @@ export class UsersService {
           email: createUserDto.email,
         }
       })
-      console.log(checkEmail, "hh");
 
       if (checkEmail) {
         return {
@@ -52,14 +52,55 @@ export class UsersService {
 
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findOne(req: Request) {
+    const data = await this.userRepo.findOne({
+      where: { id: req.user['id'] }, relations: {
+        transactionref: true,
+        transactions: true
+      }
+    })
+    delete data.password
+    return data;
   }
 
-  async findOne(email: string) {
-    console.log(email);
 
-    return await this.userRepo.findOne({ where: { email } });
+  async findAll() {
+    const data = await this.userRepo.find()
+    data.forEach((item) => {
+      delete item.password
+
+    })
+    return data;
+  }
+
+
+
+
+  async generateRef(req: Request) {
+
+    const validitydate = new Date()
+    validitydate.setSeconds(validitydate.getSeconds() + 300)
+    const username = req.user["first_name"]
+
+
+    const generateref = () => {
+      const date = new Date()
+      return username.slice(0, 3) + date.toISOString()
+    }
+
+    const ref = generateref()
+    const refToCreate = this.transactionrefRepo.create({
+      user: req.user['id'], ref: ref, validiy: validitydate.toISOString(), reciever: req.user["first_name"]
+    });
+    await this.transactionrefRepo.save(refToCreate);
+
+
+    return {
+      status: HttpStatus.CREATED,
+      message: "ref created",
+      ref: ref
+    }
+
   }
 
   async update(req: Request, updateUserDto: UpdateUserDto) {
@@ -75,7 +116,110 @@ export class UsersService {
   }
 
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async fundwallet(req: Request, fundwalletdto: FundWalletDto) {
+
+    const user = await this.userRepo.findOne({
+      where: {
+        id: req.user['id']
+      }, relations: {
+        transactionref: true
+      }
+    })
+
+
+
+    const userRefs = user.transactionref.map((refs) => { return refs.ref })
+
+
+    // checking senders account ballnce is not 0 or less than what his sendin
+    if (req.user['wallet'] < fundwalletdto.amount
+    ) {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        message: "insufficient balance"
+      }
+    } else if
+      // making sure you are not sending to your own ref from your account
+      (userRefs.includes(fundwalletdto.ref)) {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        message: "This ref belongs to you, send to another ref or let someone send to you "
+      }
+    } else {
+
+      // find ref in db
+      const findRefOwnerRef = await this.transactionrefRepo.findOne({
+        where: {
+          ref: fundwalletdto.ref
+        }
+      })
+
+
+      // checking if ref exists
+      if (!findRefOwnerRef) {
+        return {
+          status: HttpStatus.NOT_FOUND,
+          message: "This ref does not exist"
+        }
+      }
+
+      const date = new Date()
+      date.toISOString()
+
+      // checking if ref is still valid
+      if (findRefOwnerRef.validiy < date) {
+        return {
+          status: HttpStatus.NOT_FOUND,
+          message: "This ref is expired"
+        }
+      }
+
+      // find the ref owner to add his balance
+      const findRefOwner = await this.userRepo.findOne({
+        where: {
+          id: findRefOwnerRef.user
+        }
+      })
+
+
+      // updating ref owners balance after finding him
+      const addRefOwnerBalance = await this.userRepo.update(findRefOwner.id, {
+        wallet: fundwalletdto.amount + findRefOwner.wallet
+      })
+
+      await this.userRepo.save(addRefOwnerBalance.raw)
+
+
+      // update the senders balance 
+      const updateSenderBalance = await this.userRepo.update(user.id, {
+        wallet: user.wallet - fundwalletdto.amount
+      })
+
+      await this.userRepo.save(updateSenderBalance.raw)
+
+      return {
+        status: HttpStatus.OK,
+        message: "Ref funded successfully",
+        reciever: findRefOwner.first_name + " " + findRefOwner.last_name
+      };
+
+    }
+
+
+  }
+
+
+  async getwalletbalance(req: Request) {
+    const user = await this.userRepo.findOne({
+      where: {
+        id: req.user["id"]
+      }
+    })
+
+    return {
+      status: HttpStatus.OK,
+      message: "Wallet balance",
+      balance: user.wallet
+    }
   }
 }

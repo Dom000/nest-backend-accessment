@@ -8,7 +8,9 @@ import { Roles } from '../Decorator/Role.decorator';
 import { UserRole } from './entities/user.entity';
 import { RolesGuard } from '../Guard/Role.guard';
 import { JwtGuard } from '../Guard/Jwt.guard';
-
+import { ApiBadRequestResponse, ApiBasicAuth, ApiBearerAuth, ApiCreatedResponse, ApiProperty, ApiTags } from '@nestjs/swagger';
+import { FundWalletDto } from './dto/fundwallet.dto';
+@ApiTags("User functions")
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
@@ -17,18 +19,26 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
-  @Get()
+
+  @Post("fund-wallet")
+  @UseGuards(JwtGuard)
+  fundwallet(@Req() req: Request, @Body() fundwalletdto: FundWalletDto) {
+    return this.usersService.fundwallet(req, fundwalletdto);
+  }
+
+  @Get("")
+  @UseGuards(JwtGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
   findAll() {
     return this.usersService.findAll();
   }
-
 
 
   @Get('hello')
   @UseGuards(JwtGuard, RolesGuard)
   @Roles(UserRole.USER)
   findOne(@Req() req: Request) {
-    return req.user;
+    return this.usersService.findOne(req);
   }
 
 
@@ -39,8 +49,27 @@ export class UsersController {
     return this.usersService.update(req, updateUserDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  @ApiCreatedResponse({
+    description: "ref created"
+  })
+  @ApiBearerAuth()
+  @Get('generate-ref')
+  @UseGuards(JwtGuard)
+  generateRef(@Req() req: Request) {
+    return this.usersService.generateRef(req);
   }
+
+
+  @ApiCreatedResponse({
+    description: "Your wallet balance"
+  })
+  @ApiBearerAuth()
+  @Get('get-wallet-balance')
+  @UseGuards(JwtGuard)
+  getwalletBalance(@Req() req: Request) {
+    return this.usersService.getwalletbalance(req);
+  }
+
+
+
 }

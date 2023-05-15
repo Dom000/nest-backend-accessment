@@ -39,8 +39,7 @@ async function bootstrap() {
   app.enableCors({
     origin: configService.get('cors.origin'),
     methods: configService.get('cors.methods'),
-    preflightContinue: true,
-    optionsSuccessStatus: 200,
+
   });
   await app.listen(port).then(() => {
     console.log(`Running on ${configService.get<number>('app.full_url')}`);

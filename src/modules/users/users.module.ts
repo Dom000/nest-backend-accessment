@@ -6,9 +6,10 @@ import { User } from './entities/user.entity';
 import { DataSource } from 'typeorm';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from '../Guard/Role.guard';
+import { TransactionRef } from '../transactions/entities/transactionref.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User])],
+  imports: [TypeOrmModule.forFeature([User,TransactionRef])],
   controllers: [UsersController],
   providers: [
     UsersService]

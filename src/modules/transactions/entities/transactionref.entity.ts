@@ -24,7 +24,7 @@ export class TransactionRef {
 
 
     @ManyToOne(() => User, (user) => user.transactionref)
-    user?: User
+    user?: string
 
     @CreateDateColumn({
         type: 'timestamp',
