@@ -29,7 +29,7 @@ export class TransactionsService {
   findAll(options: IPaginationOptions): Observable<Pagination<Transaction>> {
     return from(paginate<Transaction>(this.transactionRepo, options, {
     })).pipe(
-      map((blogEntries: Pagination<Transaction>) => blogEntries)
+      map((transactionEntries: Pagination<Transaction>) => transactionEntries)
     )
   }
 
