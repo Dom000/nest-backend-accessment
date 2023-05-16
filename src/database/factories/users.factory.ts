@@ -10,6 +10,7 @@ define(User, (faker: typeof Faker) => {
     user.last_name = faker.lorem.sentence();
     user.email = faker.internet.email();
     user.password = faker.internet.password();
+    user.wallet=faker.number.int()
 
 
     return user;

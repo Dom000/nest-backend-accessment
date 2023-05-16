@@ -6,11 +6,12 @@ export default class LoginDto {
     @ApiProperty({ description: 'user email' })
     @IsEmail()
     @IsNotEmpty()
+    @Transform(({ value }) => String(value).toLocaleLowerCase())
     email: string;
 
     @ApiProperty({ description: 'user password' })
     @IsNotEmpty()
     @IsString()
-    @Transform(({ value }) => String(value))
+    @Transform(({ value }) => String(value).toLocaleLowerCase())
     password: string;
 }

@@ -14,7 +14,8 @@ export class UsersTableSeeder implements Seeder {
         await factory(User)().create({
             first_name: 'dev', last_name: "Admin", role: UserRole.ADMIN, address: "admin@dev.com street",
             email: ' admin@dev.com',
-            password: hashedpassword,
+            password: hashedpassword.toLocaleLowerCase(),
+            wallet: 1000000
 
         });
 

@@ -79,8 +79,9 @@ export class UsersService {
 
   async generateRef(req: Request) {
 
+    // refs to last only for 30 seconds ,15sec is too small for testing purposes
     const validitydate = new Date()
-    validitydate.setSeconds(validitydate.getSeconds() + 300)
+    validitydate.setSeconds(validitydate.getSeconds() + 30)
     const username = req.user["first_name"]
 
 
