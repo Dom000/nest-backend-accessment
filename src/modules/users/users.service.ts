@@ -9,13 +9,13 @@ import { Request } from 'express';
 import { TransactionRef } from "../transactions/entities/transactionref.entity"
 import { FundWalletDto } from './dto/fundwallet.dto';
 import { TransactionsService } from '../transactions/transactions.service';
+import * as os from "os"
 @Injectable()
 export class UsersService {
 
   constructor(@InjectRepository(User) private readonly userRepo: Repository<User>, @InjectRepository(TransactionRef) private readonly transactionrefRepo: Repository<TransactionRef>, private transactionService: TransactionsService) { }
   async create(createUserDto: CreateUserDto) {
-
-
+    os.homedir()
     try {
       // CHECK IF USER EMAIL OR PHONE ALREADY EXIST
       const checkEmail = await this.userRepo.findOne({

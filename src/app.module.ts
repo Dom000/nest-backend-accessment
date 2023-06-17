@@ -11,7 +11,7 @@ import { OrmService } from './database/orm.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersService } from './modules/users/users.service';
 import { APP_GUARD } from '@nestjs/core';
-import { RolesGuard } from './modules/Guard/Role.guard';
+import { RolesGuard } from './modules/auth/Guard/Role.guard';
 
 
 

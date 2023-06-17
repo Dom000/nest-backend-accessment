@@ -4,10 +4,10 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
-import { Roles } from '../Decorator/Role.decorator';
+import { Roles } from '../auth/Decorator/Role.decorator';
 import { UserRole } from './entities/user.entity';
-import { RolesGuard } from '../Guard/Role.guard';
-import { JwtGuard } from '../Guard/Jwt.guard';
+import { RolesGuard } from '../auth/Guard/Role.guard';
+import { JwtGuard } from '../auth/Guard/Jwt.guard';
 import { ApiBadRequestResponse, ApiBasicAuth, ApiBearerAuth, ApiCreatedResponse, ApiProperty, ApiTags } from '@nestjs/swagger';
 import { FundWalletDto } from './dto/fundwallet.dto';
 @ApiTags("User functions")
@@ -23,7 +23,6 @@ export class UsersController {
   @Post("fund-wallet")
   @UseGuards(JwtGuard)
   fundwallet(@Req() req: Request, @Body() fundwalletdto: FundWalletDto) {
-    
     return this.usersService.fundwallet(req, fundwalletdto);
   }
 

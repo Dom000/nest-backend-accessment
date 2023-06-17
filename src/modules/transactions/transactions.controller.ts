@@ -2,10 +2,10 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, De
 import { TransactionsService } from './transactions.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
-import { JwtGuard } from '../Guard/Jwt.guard';
-import { RolesGuard } from '../Guard/Role.guard';
+import { JwtGuard } from '../auth/Guard/Jwt.guard';
+import { RolesGuard } from '../auth/Guard/Role.guard';
 import { UserRole } from '../users/entities/user.entity';
-import { Roles } from '../Decorator/Role.decorator';
+import { Roles } from '../auth/Decorator/Role.decorator';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { Transaction } from './entities/transaction.entity';
 import { query } from 'express';

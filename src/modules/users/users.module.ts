@@ -5,15 +5,15 @@ import { TypeOrmModule, getDataSourceToken, getRepositoryToken } from '@nestjs/t
 import { User } from './entities/user.entity';
 import { DataSource } from 'typeorm';
 import { APP_GUARD } from '@nestjs/core';
-import { RolesGuard } from '../Guard/Role.guard';
+import { RolesGuard } from '../auth/Guard/Role.guard';
 import { TransactionRef } from '../transactions/entities/transactionref.entity';
 import { TransactionsService } from '../transactions/transactions.service';
 import { Transaction } from '../transactions/entities/transaction.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User,TransactionRef,Transaction])],
+  imports: [TypeOrmModule.forFeature([User, TransactionRef, Transaction])],
   controllers: [UsersController],
   providers: [
-    UsersService,TransactionsService]
+    UsersService, TransactionsService]
 })
 export class UsersModule { }
